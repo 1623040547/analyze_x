@@ -27,4 +27,18 @@ analyzer => tester => getter => gen
 #### gen
 通过获取到的信息，构建生成代码
 
+### 特点
+1、自动寻找符合要求的类定义并生成需求文件<br>   
+2、自动import（目前仅针对自有包）<br>   
+3、选择使用获取编译单元最多的文件进行扩展并输出<br>
+
+### 支持
+1.Event Factory代码生成<br>   
+2.Param Factory代码生成<br>   
+
+
+
+
+
+
 
