@@ -1,0 +1,34 @@
+name: analyzer_x
+description: A new Flutter project.
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: '>=2.18.2 <3.0.0'
+  flutter: ">=2.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  analyzer: ^5.2.0 #语法树解析
+  dart_style: ^2.2.5 #代码自动格式化
+  pub_semver: ^2.1.4
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.example.analyzer_x
+        pluginClass: Analyzer_xPlugin
+      ios:
+        pluginClass: Analyzer_xPlugin
+      macos:
+        pluginClass: Analyzer_xPlugin
+      windows:
+        pluginClass: Analyzer_xPluginCApi
