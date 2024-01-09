@@ -132,6 +132,7 @@ class EventFactoryGen {
     return """
     BaseEvent from(String name, List<BaseParam> params) {
       BaseEvent? event;
+      params = params.toList();
       try {
         switch (name) {
         ${caseParts(units).join()}
