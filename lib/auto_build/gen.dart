@@ -8,7 +8,7 @@ import 'auto.dart';
 
 int _count = 0;
 
-class AutoGenerator extends GeneratorForAnnotation<AutoPath> {
+class AutoGenerator extends GeneratorForAnnotation<AnalyzerXAutoBuild> {
   @override
   generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) async {

@@ -1,10 +1,10 @@
 
 ///借由此注解，绑定build_runner自动生成代码
-class AutoPath {
+class AnalyzerXAutoBuild {
   final String path;
 
-  const AutoPath({this.path = ''});
+  const AnalyzerXAutoBuild({this.path = ''});
 }
 
-@AutoPath()
+@AnalyzerXAutoBuild()
 class AutoPathInstance {}
