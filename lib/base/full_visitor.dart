@@ -53,20 +53,19 @@ class FullVisitor extends SimpleAstVisitor {
   visitAssertStatement(AssertStatement node) => forward(node);
 
   @override
+  visitAssignedVariablePattern(AssignedVariablePattern node) => forward(node);
+
+  @override
   visitAssignmentExpression(AssignmentExpression node) => forward(node);
 
   @override
-  visitAugmentationImportDirective(AugmentationImportDirective node) =>
-      forward(node);
+  visitAugmentationImportDirective(AugmentationImportDirective node) => forward(node);
 
   @override
   visitAwaitExpression(AwaitExpression node) => forward(node);
 
   @override
   visitBinaryExpression(BinaryExpression node) => forward(node);
-
-  @override
-  visitBinaryPattern(BinaryPattern node) => forward(node);
 
   @override
   visitBlock(Block node) => forward(node);
@@ -123,8 +122,7 @@ class FullVisitor extends SimpleAstVisitor {
   visitConstructorDeclaration(ConstructorDeclaration node) => forward(node);
 
   @override
-  visitConstructorFieldInitializer(ConstructorFieldInitializer node) =>
-      forward(node);
+  visitConstructorFieldInitializer(ConstructorFieldInitializer node) => forward(node);
 
   @override
   visitConstructorName(ConstructorName node) => forward(node);
@@ -140,6 +138,9 @@ class FullVisitor extends SimpleAstVisitor {
 
   @override
   visitDeclaredIdentifier(DeclaredIdentifier node) => forward(node);
+
+  @override
+  visitDeclaredVariablePattern(DeclaredVariablePattern node) => forward(node);
 
   @override
   visitDefaultFormalParameter(DefaultFormalParameter node) => forward(node);
@@ -187,7 +188,7 @@ class FullVisitor extends SimpleAstVisitor {
   visitExtensionOverride(ExtensionOverride node) => forward(node);
 
   @override
-  visitExtractorPattern(ExtractorPattern node) => forward(node);
+  visitExtensionTypeDeclaration(ExtensionTypeDeclaration node) => forward(node);
 
   @override
   visitFieldDeclaration(FieldDeclaration node) => forward(node);
@@ -196,12 +197,10 @@ class FullVisitor extends SimpleAstVisitor {
   visitFieldFormalParameter(FieldFormalParameter node) => forward(node);
 
   @override
-  visitForEachPartsWithDeclaration(ForEachPartsWithDeclaration node) =>
-      forward(node);
+  visitForEachPartsWithDeclaration(ForEachPartsWithDeclaration node) => forward(node);
 
   @override
-  visitForEachPartsWithIdentifier(ForEachPartsWithIdentifier node) =>
-      forward(node);
+  visitForEachPartsWithIdentifier(ForEachPartsWithIdentifier node) => forward(node);
 
   @override
   visitForEachPartsWithPattern(ForEachPartsWithPattern node) => forward(node);
@@ -255,7 +254,7 @@ class FullVisitor extends SimpleAstVisitor {
   visitGenericTypeAlias(GenericTypeAlias node) => forward(node);
 
   @override
-  visitHideClause(HideClause node) => forward(node);
+  visitGuardedPattern(GuardedPattern node) => forward(node);
 
   @override
   visitHideCombinator(HideCombinator node) => forward(node);
@@ -276,11 +275,13 @@ class FullVisitor extends SimpleAstVisitor {
   visitImportDirective(ImportDirective node) => forward(node);
 
   @override
+  visitImportPrefixReference(ImportPrefixReference node) => forward(node);
+
+  @override
   visitIndexExpression(IndexExpression node) => forward(node);
 
   @override
-  visitInstanceCreationExpression(InstanceCreationExpression node) =>
-      forward(node);
+  visitInstanceCreationExpression(InstanceCreationExpression node) => forward(node);
 
   @override
   visitIntegerLiteral(IntegerLiteral node) => forward(node);
@@ -318,6 +319,12 @@ class FullVisitor extends SimpleAstVisitor {
   visitListPattern(ListPattern node) => forward(node);
 
   @override
+  visitLogicalAndPattern(LogicalAndPattern node) => forward(node);
+
+  @override
+  visitLogicalOrPattern(LogicalOrPattern node) => forward(node);
+
+  @override
   visitMapLiteralEntry(MapLiteralEntry node) => forward(node);
 
   @override
@@ -348,7 +355,16 @@ class FullVisitor extends SimpleAstVisitor {
   visitNativeFunctionBody(NativeFunctionBody node) => forward(node);
 
   @override
+  visitNullAssertPattern(NullAssertPattern node) => forward(node);
+
+  @override
+  visitNullCheckPattern(NullCheckPattern node) => forward(node);
+
+  @override
   visitNullLiteral(NullLiteral node) => forward(node);
+
+  @override
+  visitObjectPattern(ObjectPattern node) => forward(node);
 
   @override
   visitOnClause(OnClause node) => forward(node);
@@ -369,23 +385,21 @@ class FullVisitor extends SimpleAstVisitor {
   visitPatternAssignment(PatternAssignment node) => forward(node);
 
   @override
-  visitPatternAssignmentStatement(PatternAssignmentStatement node) =>
-      forward(node);
+  visitPatternField(PatternField node) => forward(node);
 
   @override
-  visitPatternVariableDeclaration(PatternVariableDeclaration node) =>
-      forward(node);
+  visitPatternFieldName(PatternFieldName node) => forward(node);
+
+  @override
+  visitPatternVariableDeclaration(PatternVariableDeclaration node) => forward(node);
 
   @override
   visitPatternVariableDeclarationStatement(
-          PatternVariableDeclarationStatement node) =>
+      PatternVariableDeclarationStatement node) =>
       forward(node);
 
   @override
   visitPostfixExpression(PostfixExpression node) => forward(node);
-
-  @override
-  visitPostfixPattern(PostfixPattern node) => forward(node);
 
   @override
   visitPrefixedIdentifier(PrefixedIdentifier node) => forward(node);
@@ -403,12 +417,6 @@ class FullVisitor extends SimpleAstVisitor {
   visitRecordPattern(RecordPattern node) => forward(node);
 
   @override
-  visitRecordPatternField(RecordPatternField node) => forward(node);
-
-  @override
-  visitRecordPatternFieldName(RecordPatternFieldName node) => forward(node);
-
-  @override
   visitRecordTypeAnnotation(RecordTypeAnnotation node) => forward(node);
 
   @override
@@ -416,21 +424,32 @@ class FullVisitor extends SimpleAstVisitor {
       forward(node);
 
   @override
-  visitRecordTypeAnnotationNamedFields(RecordTypeAnnotationNamedFields node) =>
+  visitRecordTypeAnnotationNamedFields(
+      RecordTypeAnnotationNamedFields node) =>
       forward(node);
 
   @override
   visitRecordTypeAnnotationPositionalField(
-          RecordTypeAnnotationPositionalField node) =>
+      RecordTypeAnnotationPositionalField node) =>
       forward(node);
 
   @override
   visitRedirectingConstructorInvocation(
-          RedirectingConstructorInvocation node) =>
+      RedirectingConstructorInvocation node) =>
       forward(node);
 
   @override
   visitRelationalPattern(RelationalPattern node) => forward(node);
+
+  @override
+  visitRepresentationConstructorName(RepresentationConstructorName node) =>
+      forward(node);
+
+  @override
+  visitRepresentationDeclaration(RepresentationDeclaration node) => forward(node);
+
+  @override
+  visitRestPatternElement(RestPatternElement node) => forward(node);
 
   @override
   visitRethrowExpression(RethrowExpression node) => forward(node);
@@ -445,13 +464,7 @@ class FullVisitor extends SimpleAstVisitor {
   visitSetOrMapLiteral(SetOrMapLiteral node) => forward(node);
 
   @override
-  visitShowClause(ShowClause node) => forward(node);
-
-  @override
   visitShowCombinator(ShowCombinator node) => forward(node);
-
-  @override
-  visitShowHideElement(ShowHideElement node) => forward(node);
 
   @override
   visitSimpleFormalParameter(SimpleFormalParameter node) => forward(node);
@@ -469,8 +482,7 @@ class FullVisitor extends SimpleAstVisitor {
   visitStringInterpolation(StringInterpolation node) => forward(node);
 
   @override
-  visitSuperConstructorInvocation(SuperConstructorInvocation node) =>
-      forward(node);
+  visitSuperConstructorInvocation(SuperConstructorInvocation node) => forward(node);
 
   @override
   visitSuperExpression(SuperExpression node) => forward(node);
@@ -491,9 +503,6 @@ class FullVisitor extends SimpleAstVisitor {
   visitSwitchExpressionCase(SwitchExpressionCase node) => forward(node);
 
   @override
-  visitSwitchExpressionDefault(SwitchExpressionDefault node) => forward(node);
-
-  @override
   visitSwitchPatternCase(SwitchPatternCase node) => forward(node);
 
   @override
@@ -509,8 +518,7 @@ class FullVisitor extends SimpleAstVisitor {
   visitThrowExpression(ThrowExpression node) => forward(node);
 
   @override
-  visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) =>
-      forward(node);
+  visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) => forward(node);
 
   @override
   visitTryStatement(TryStatement node) => forward(node);
@@ -538,17 +546,18 @@ class FullVisitor extends SimpleAstVisitor {
       forward(node);
 
   @override
-  visitVariablePattern(VariablePattern node) => forward(node);
-
-  @override
   visitWhenClause(WhenClause node) => forward(node);
 
   @override
   visitWhileStatement(WhileStatement node) => forward(node);
 
   @override
+  visitWildcardPattern(WildcardPattern node) => forward(node);
+
+  @override
   visitWithClause(WithClause node) => forward(node);
 
   @override
   visitYieldStatement(YieldStatement node) => forward(node);
+
 }

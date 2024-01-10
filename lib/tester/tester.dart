@@ -20,7 +20,7 @@ class SuperNameRTester extends RetroTester<SimpleStringLiteral> {
     NamedExpression namedExpression = retroNode<NamedExpression>(node);
     Label label = namedExpression.name;
     if (extendsClause == null ||
-        extendsClause.superclass.name.name != superClass) {
+        extendsClause.superclass.name2.toString() != superClass) {
       return false;
     }
     if (label.label.name != labelName) {

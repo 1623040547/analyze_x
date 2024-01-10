@@ -35,7 +35,9 @@ abstract class Getter implements Testers {
       _reset();
     }
     for (var tester in testers) {
-      _accepts[tester] = tester.inPath(node) && tester.accept(node);
+      if(tester.inPath(node)){
+        _accepts[tester] = tester.accept(node);
+      }
     }
   }
 

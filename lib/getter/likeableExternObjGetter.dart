@@ -22,7 +22,7 @@ class LikeableExternObjGetter extends Getter {
 
   List<String>? getNamedTypes() => tester<MayExternRTester>()
       .nodes[AnalyzerStep.namedType]
-      ?.map((node) => (node as NamedType).name.name)
+      ?.map((node) => (node as NamedType).name2.toString())
       .toList();
 
   List<String>? getMethodInvocations() => tester<MayExternRTester>()
