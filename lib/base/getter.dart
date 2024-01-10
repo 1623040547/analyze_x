@@ -11,16 +11,11 @@ abstract class Getter implements Testers {
     return testers.whereType<T>().first;
   }
 
-  ///在每一次reset时重置为true，该变量用以记录每一个在路径上的节点是否被tester接收，
-  ///当所有节点都不在teseter指定路径[RetroTester.path]上时，accept会为true
-  bool accept = false;
-
   ///用于记录每一个[RetroTester]的接收情况
-  @override
-  Map<RetroTester, bool> accepts = {};
+  final Map<RetroTester, bool> _accepts = {};
 
   ///获取某一个[RetroTester]的接收情况，当该tester未在路径上而未被记录时，返回false
-  bool testerAccept<T>() => accepts[testers.whereType<T>().first] ?? false;
+  bool testerAccept<T>() => _accepts[testers.whereType<T>().first] ?? false;
 
   ///记录特征节点，为所有[RetroTester.path]的并集
   List<AnalyzerStep> get patterns {
@@ -28,6 +23,7 @@ abstract class Getter implements Testers {
     for (var tester in testers) {
       steps.addAll(tester.path);
     }
+    steps.add(AnalyzerStep.classDeclaration);
     return steps.toList();
   }
 
@@ -37,12 +33,11 @@ abstract class Getter implements Testers {
   ///不需要重置：执行每一个tester的[inPath]与[accept]方法
   void trigger(node, AnalyzerStep step) {
     if (resetFlag(node, step)) {
-      reset();
+      _reset();
     }
     for (var tester in testers) {
       if (tester.inPath(node)) {
-        accepts[tester] = tester.accept(node);
-        accept &= accepts[tester]!;
+        _accepts[tester] = tester.accept(node);
       }
     }
   }
@@ -52,19 +47,18 @@ abstract class Getter implements Testers {
     return step == AnalyzerStep.classDeclaration;
   }
 
-  ///重置函数，会重置[Getter]当前的接受状态
-  ///如果在其上层需求需求获取数据并重置，可以覆盖此方法并调用[super.reset]
-  void reset() {
-    accept = true;
-    accepts.clear();
+  void _reset() {
+    reset();
+    _accepts.clear();
     for (var tester in testers) {
       tester.reset();
     }
   }
+
+  ///重置函数，会重置[Getter]当前的接受状态
+  void reset();
 }
 
 abstract class Testers {
   List<RetroTester> testers = [];
-
-  Map<RetroTester, bool> accepts = {};
 }

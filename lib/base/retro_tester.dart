@@ -6,6 +6,25 @@ import 'step.dart';
 abstract class RetroTester<T extends AstNode> {
   List<AnalyzerStep> get path;
 
+  ///收集符合需求的节点，在类[RetroTester]中，它们一定是类型[T]
+  final List<AstNode> _nodes = [];
+
+  ///对于符合需求的节点
+  ///它们的类型一定通过[path]中[AnalyzerStep.typeChecker]
+  Map<AnalyzerStep, List<AstNode>> get nodes {
+    Map<AnalyzerStep, List<AstNode>> map = {}
+      ..addEntries(path.map((e) => MapEntry(e, [])));
+    for (var node in _nodes) {
+      AnalyzerStep step = path.firstWhere((s) => s.typeChecker(node));
+      map[step]!.add(node);
+    }
+    return map;
+  }
+
+  T get firstNode => _nodes.first as T;
+
+  List<T> get firstList => _nodes.map((e) => e as T).toList();
+
   ///当前节点在路径上
   bool inPath(node) {
     if (node is T) {
@@ -19,6 +38,11 @@ abstract class RetroTester<T extends AstNode> {
           break;
         }
         parent = parent.parent;
+      }
+
+      ///当一个节点位于路径上并且被接受，将其加入
+      if (state == path.length && accept(node)) {
+        _nodes.add(node);
       }
       return state == path.length;
     }
@@ -39,9 +63,19 @@ abstract class RetroTester<T extends AstNode> {
     return node;
   }
 
+  R retroFirstNode<R>() {
+    return retroNode<R>(firstNode);
+  }
+
+  List<R> retroFirstList<R>() {
+    return firstList.map((e) => retroNode<R>(e)).toList();
+  }
+
   bool accept(T node);
 
-  void reset();
+  void reset() {
+    _nodes.clear();
+  }
 }
 
 ///部分Tester并非需求[path]为一条路径
@@ -53,7 +87,11 @@ abstract class SimpleRetroTester extends RetroTester {
 
   @override
   bool inPath(node) {
-    return true;
+    if (path.where((element) => element.typeChecker(node)).isNotEmpty) {
+      _nodes.add(node);
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -70,8 +108,19 @@ abstract class SimpleRetroTester extends RetroTester {
   }
 
   @override
-  bool accept(node);
+  bool accept(node) {
+    return true;
+  }
 
   @override
-  void reset() {}
+  get firstNode => throw UnimplementedError();
+
+  @override
+  get firstList => throw UnimplementedError();
+
+  @override
+  R retroFirstNode<R>() => throw UnimplementedError();
+
+  @override
+  List<R> retroFirstList<R>() => throw UnimplementedError();
 }

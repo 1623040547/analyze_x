@@ -1,3 +1,5 @@
+import 'package:analyzer/dart/ast/ast.dart';
+
 import '../base/base.dart';
 import '../path/path.dart';
 import '../tester/tester.dart';
@@ -11,18 +13,15 @@ class EventGetter extends Getter {
 
   @override
   void reset() {
-    if (accept && testerAccept<SuperNameRTester>()) {
+    if (testerAccept<SuperNameRTester>()) {
       units.add(EventUnit(
-        className: tester<SuperNameRTester>().className,
-        eventName: tester<SuperNameRTester>().labelStringValue,
-        classParameters: tester<ClassParametersRTester>().classParameters,
-        classParameterQuestions:
-            tester<ClassParametersRTester>().classParameterQuestions,
-        constructorParameters:
-            tester<ConstructorParametersRTester>().constructorParameters,
+        className: className,
+        eventName: eventName,
+        classParameters: classParameters,
+        classParameterQuestions: classParameterQuestions,
+        constructorParameters: constructorParameters,
       ));
     }
-    super.reset();
   }
 
   @override
@@ -34,6 +33,40 @@ class EventGetter extends Getter {
     ClassParametersRTester(),
     ConstructorParametersRTester(),
   ];
+
+  String get className => tester<SuperNameRTester>()
+      .retroFirstNode<ClassDeclaration>()
+      .name
+      .toString();
+
+  String get eventName => tester<SuperNameRTester>().firstNode.value;
+
+  Map<String, String> get classParameters => Map.fromIterables(
+        tester<ClassParametersRTester>()
+            .firstList
+            .map((e) => e.name.toString()),
+        tester<ClassParametersRTester>()
+            .retroFirstList<VariableDeclarationList>()
+            .map((e) => e.type.toString().replaceAll('?', '')),
+      );
+
+  Map<String, bool> get classParameterQuestions => Map.fromIterables(
+        tester<ClassParametersRTester>()
+            .firstList
+            .map((e) => e.name.toString()),
+        tester<ClassParametersRTester>()
+            .retroFirstList<VariableDeclarationList>()
+            .map((e) => e.type?.question != null),
+      );
+
+  Map<String, bool> get constructorParameters => Map.fromIterables(
+        tester<ConstructorParametersRTester>()
+            .firstList
+            .map((e) => e.name.toString()),
+        tester<ConstructorParametersRTester>()
+            .firstList
+            .map((e) => e.isRequiredNamed || e.isNamed),
+      );
 
   static bool mayTarget(String fileString) {
     return fileString.contains('super') &&

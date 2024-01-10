@@ -9,16 +9,30 @@ class DeclarationGetter extends Getter {
 
   @override
   void reset() {
-    unit.dClass = tester<DeclarationRTester>().dClass.toList();
-    unit.dFunction = tester<DeclarationRTester>().dFunction.toList();
-    unit.dEnum = tester<DeclarationRTester>().dEnum.toList();
-    super.reset();
+    unit.dClass.addAll(getClasses() ?? []);
+    unit.dFunction.addAll(getFunctions() ?? []);
+    unit.dEnum.addAll(getEnums() ?? []);
   }
 
   @override
   List<RetroTester<AstNode>> testers = [
     DeclarationRTester(),
   ];
+
+  List<String>? getClasses() => tester<DeclarationRTester>()
+      .nodes[AnalyzerStep.classDeclaration]
+      ?.map((node) => (node as ClassDeclaration).name.toString())
+      .toList();
+
+  List<String>? getFunctions() => tester<DeclarationRTester>()
+      .nodes[AnalyzerStep.functionDeclaration]
+      ?.map((node) => (node as FunctionDeclaration).name.toString())
+      .toList();
+
+  List<String>? getEnums() => tester<DeclarationRTester>()
+      .nodes[AnalyzerStep.enumDeclaration]
+      ?.map((node) => (node as EnumDeclaration).name.toString())
+      .toList();
 }
 
 class DeclarationUnit {

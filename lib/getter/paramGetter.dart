@@ -1,7 +1,8 @@
+import 'package:analyzer/dart/ast/ast.dart';
+
 import '../base/base.dart';
 import '../path/path.dart';
 import '../tester/tester.dart';
-
 
 ///获取一个Class类型的数据信息，该类需满足一下条件
 ///(1)继承自类[BaseParam]
@@ -12,16 +13,22 @@ class ParamGetter extends Getter {
 
   @override
   void reset() {
-    if (accept && testerAccept<SuperNameRTester>()) {
+    if (testerAccept<SuperNameRTester>()) {
       units.add(
         ParamUnit(
-          className: tester<SuperNameRTester>().className,
-          paramName: tester<SuperNameRTester>().labelStringValue,
+          className: className,
+          paramName: paramName,
         ),
       );
     }
-    super.reset();
   }
+
+  String get className => tester<SuperNameRTester>()
+      .retroFirstNode<ClassDeclaration>()
+      .name
+      .toString();
+
+  String get paramName => tester<SuperNameRTester>().firstNode.value;
 
   @override
   List<RetroTester> testers = [
@@ -49,8 +56,7 @@ class ParamUnit {
 }
 
 Map<DartFile, List<ParamUnit>> parseParam() {
-  List<DartFile> inputFilePath =
-      getDartFiles(isTarget: ParamGetter.mayTarget);
+  List<DartFile> inputFilePath = getDartFiles(isTarget: ParamGetter.mayTarget);
   Map<DartFile, List<ParamUnit>> unitsMap = {};
 
   for (var file in inputFilePath) {

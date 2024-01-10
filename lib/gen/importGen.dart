@@ -63,7 +63,7 @@ class ImportGen {
     MainAnalyzer(fileText: targetText, getters: [likeableExternIdGetter]);
     initialImportFile.clear();
     noPartOfImport.clear();
-    match(likeableExternIdGetter.ids);
+    match(likeableExternIdGetter.unit.ids);
     return noPartOfImport
         .map((e) => 'import \'${e.importName}\';'
             .replaceAll(Platform.pathSeparator, '/'))
@@ -88,10 +88,10 @@ class ImportGen {
     });
     for (var element in initialImportFile) {
       DirectiveUnit unit = directiveGetter[element]!.unit;
-      if (unit.dPartOf.isEmpty) {
+      if (unit.dPartOfUri.isEmpty && unit.dPartOfLibrary.isEmpty) {
         noPartOfImport.add(element);
       } else {
-        if (unit.dPartOf.keys.first == 0) {
+        if (unit.dPartOfUri.isNotEmpty) {
           ///todo:uri处理
         } else {
           ///库处理
@@ -99,7 +99,7 @@ class ImportGen {
             if (directiveGetter[file]!
                 .unit
                 .dLibrary
-                .contains(unit.dPartOf.values.first)) {
+                .contains(unit.dPartOfLibrary.first)) {
               noPartOfImport.add(file);
             }
           }
