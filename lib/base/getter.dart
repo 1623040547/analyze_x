@@ -2,17 +2,16 @@ import 'retro_tester.dart';
 import 'step.dart';
 
 ///用于从[MainAnalyzer]中获取数据信息
-///数据分别存储在每一个[RetroTester]中
+///数据存储在每一个[Unit]中
 abstract class Getter implements Testers {
-  Getter();
+  ///用于记录每一个[RetroTester]的接收情况
+  final Map<RetroTester, bool> _accepts = {};
 
+  ///获取存储在[testers]中类型为[T]的[RetroTester]
   T tester<T>() {
     assert(testers.whereType<T>().length == 1);
     return testers.whereType<T>().first;
   }
-
-  ///用于记录每一个[RetroTester]的接收情况
-  final Map<RetroTester, bool> _accepts = {};
 
   ///获取某一个[RetroTester]的接收情况，当该tester未在路径上而未被记录时，返回false
   bool testerAccept<T>() => _accepts[testers.whereType<T>().first] ?? false;
@@ -36,9 +35,7 @@ abstract class Getter implements Testers {
       _reset();
     }
     for (var tester in testers) {
-      if (tester.inPath(node)) {
-        _accepts[tester] = tester.accept(node);
-      }
+      _accepts[tester] = tester.inPath(node) && tester.accept(node);
     }
   }
 
@@ -47,6 +44,7 @@ abstract class Getter implements Testers {
     return step == AnalyzerStep.classDeclaration;
   }
 
+  ///重置函数，会重置[Getter]当前的接受状态与每个[tester]的接受状态
   void _reset() {
     reset();
     _accepts.clear();
@@ -55,7 +53,8 @@ abstract class Getter implements Testers {
     }
   }
 
-  ///重置函数，会重置[Getter]当前的接受状态
+  ///提供给继承[Getter]的子类的[reset]接口,
+  ///允许子类在此处从[tester]中获取想要的数据
   void reset();
 }
 
