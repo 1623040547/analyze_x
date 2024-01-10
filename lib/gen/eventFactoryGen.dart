@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:analyzer_x/base/log.dart';
 import 'package:dart_style/dart_style.dart';
 
 import '../getter/eventGetter.dart';
@@ -16,8 +17,8 @@ class EventFactoryGen {
   EventFactoryGen();
 
   void execute() {
-    print(DateTime.now());
-    print('parse event');
+    analyzerLog(DateTime.now());
+    analyzerLog('parse event');
     Map<DartFile, List<EventUnit>> units = parseEvent();
 
     assert(units.values.expand((e) => e).toList().isNotEmpty);
@@ -36,8 +37,8 @@ class EventFactoryGen {
     );
 
     ///自动引入
-    print(DateTime.now());
-    print('auto import');
+    analyzerLog(DateTime.now());
+    analyzerLog('auto import');
     importFiles.clear();
     importFiles.addAll(ImportGen.instance.analyse(fileString));
     fileString = dartFile(header: header(), classBlock: [fileString]);
@@ -56,8 +57,8 @@ class EventFactoryGen {
       }
     });
     File(outFile!.filePath.replaceAll('.dart', '.g.dart')).writeAsString(code);
-    print(DateTime.now());
-    print(
+    analyzerLog(DateTime.now());
+    analyzerLog(
         'EventFactoryGen: ${outFile!.importName.replaceAll('.dart', '.g.dart')}');
   }
 

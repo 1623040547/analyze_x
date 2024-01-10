@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:dart_style/dart_style.dart';
 
+import '../base/log.dart';
 import '../getter/paramGetter.dart';
 import '../path/path.dart';
 import 'importGen.dart';
@@ -13,8 +13,8 @@ class ParamFactoryGen {
   ParamFactoryGen();
 
   void execute() {
-    print(DateTime.now());
-    print('parse param');
+    analyzerLog(DateTime.now());
+    analyzerLog('parse param');
     Map<DartFile, List<ParamUnit>> units = parseParam();
 
     assert(units.values.expand((e) => e).toList().isNotEmpty);
@@ -30,8 +30,8 @@ class ParamFactoryGen {
     );
 
     ///自动引入
-    print(DateTime.now());
-    print('auto import');
+    analyzerLog(DateTime.now());
+    analyzerLog('auto import');
     importFiles.clear();
     importFiles.addAll(ImportGen.instance.analyse(fileString));
     fileString = dartFile(header: header(), classBlock: [fileString]);
@@ -50,8 +50,9 @@ class ParamFactoryGen {
       }
     });
     File(outFile!.filePath.replaceAll('.dart', '.g.dart')).writeAsString(code);
-    print(DateTime.now());
-    print('ParamFactoryGen: ${outFile!.importName.replaceAll('.dart', '.g.dart')}');
+    analyzerLog(DateTime.now());
+    analyzerLog(
+        'ParamFactoryGen: ${outFile!.importName.replaceAll('.dart', '.g.dart')}');
   }
 
   String dartFile({required header, required List<String> classBlock}) {
