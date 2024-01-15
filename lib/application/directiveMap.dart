@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:analyzer_x/getter/directiveGetterX.dart';
 import 'package:analyzer_x/path/path.dart';
 
-import '../../base/analyzer.dart';
+import '../base/analyzer.dart';
 
 class DirectiveMap {
   Map<Package, Map<DartFile, DirectiveXData>> map = {};
