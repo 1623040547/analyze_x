@@ -7,7 +7,7 @@ abstract class RetroTester<T extends AstNode> {
   List<AnalyzerStep> get path;
 
   ///收集符合需求的节点，在类[RetroTester]中，它们一定是类型[T]
-  final List<AstNode> _nodes = [];
+  final Set<AstNode> _nodes = {};
 
   ///对于符合需求的节点
   ///它们的类型一定通过[path]中[AnalyzerStep.typeChecker]
@@ -117,6 +117,23 @@ abstract class SimpleRetroTester extends RetroTester {
 
   @override
   get firstList => throw UnimplementedError();
+
+  T? tNode<T extends AstNode>() {
+    AnalyzerStep step = nodes.keys.firstWhere(
+      (element) => element.typeChecker(T),
+    );
+    if (nodes[step]!.isEmpty) {
+      return null;
+    }
+    return nodes[step]!.first as T;
+  }
+
+  List<T> tList<T extends AstNode>() {
+    AnalyzerStep step = nodes.keys.firstWhere(
+      (element) => element.typeChecker(T),
+    );
+    return nodes[step]!.map((e) => e as T).toList();
+  }
 
   @override
   R retroFirstNode<R>() => throw UnimplementedError();

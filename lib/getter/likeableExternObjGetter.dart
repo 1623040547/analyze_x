@@ -10,9 +10,9 @@ class LikeableExternObjGetter extends Getter {
 
   @override
   void reset() {
-    unit.ids.addAll(getNamedTypes() ?? []);
-    unit.ids.addAll(getMethodInvocations() ?? []);
-    unit.ids.addAll(getPrefixedIdentifiers() ?? []);
+    unit.ids.addAll(getNamedTypes());
+    unit.ids.addAll(getMethodInvocations());
+    unit.ids.addAll(getPrefixedIdentifiers());
   }
 
   @override
@@ -20,19 +20,19 @@ class LikeableExternObjGetter extends Getter {
     MayExternRTester(),
   ];
 
-  List<String>? getNamedTypes() => tester<MayExternRTester>()
-      .nodes[AnalyzerStep.namedType]
-      ?.map((node) => (node as NamedType).name2.toString())
+  List<String> getNamedTypes() => tester<MayExternRTester>()
+      .tList<NamedType>()
+      .map((node) => node.name2.toString())
       .toList();
 
-  List<String>? getMethodInvocations() => tester<MayExternRTester>()
-      .nodes[AnalyzerStep.methodInvocation]
-      ?.map((node) => (node as MethodInvocation).methodName.name)
+  List<String> getMethodInvocations() => tester<MayExternRTester>()
+      .tList<MethodInvocation>()
+      .map((node) => node.methodName.toString())
       .toList();
 
-  List<String>? getPrefixedIdentifiers() => tester<MayExternRTester>()
-      .nodes[AnalyzerStep.prefixedIdentifier]
-      ?.map((node) => (node as PrefixedIdentifier).prefix.name)
+  List<String> getPrefixedIdentifiers() => tester<MayExternRTester>()
+      .tList<PrefixedIdentifier>()
+      .map((node) => node.prefix.name.toString())
       .toList();
 }
 

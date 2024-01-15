@@ -9,9 +9,9 @@ class DeclarationGetter extends Getter {
 
   @override
   void reset() {
-    unit.dClass.addAll(getClasses() ?? []);
-    unit.dFunction.addAll(getFunctions() ?? []);
-    unit.dEnum.addAll(getEnums() ?? []);
+    unit.dClass.addAll(getClasses());
+    unit.dFunction.addAll(getFunctions());
+    unit.dEnum.addAll(getEnums());
   }
 
   @override
@@ -19,19 +19,19 @@ class DeclarationGetter extends Getter {
     DeclarationRTester(),
   ];
 
-  List<String>? getClasses() => tester<DeclarationRTester>()
-      .nodes[AnalyzerStep.classDeclaration]
-      ?.map((node) => (node as ClassDeclaration).name.toString())
+  List<String> getClasses() => tester<DeclarationRTester>()
+      .tList<ClassDeclaration>()
+      .map((e) => e.name.toString())
       .toList();
 
-  List<String>? getFunctions() => tester<DeclarationRTester>()
-      .nodes[AnalyzerStep.functionDeclaration]
-      ?.map((node) => (node as FunctionDeclaration).name.toString())
+  List<String> getFunctions() => tester<DeclarationRTester>()
+      .tList<FunctionDeclaration>()
+      .map((e) => e.name.toString())
       .toList();
 
-  List<String>? getEnums() => tester<DeclarationRTester>()
-      .nodes[AnalyzerStep.enumDeclaration]
-      ?.map((node) => (node as EnumDeclaration).name.toString())
+  List<String> getEnums() => tester<DeclarationRTester>()
+      .tList<EnumDeclaration>()
+      .map((e) => e.name.toString())
       .toList();
 }
 

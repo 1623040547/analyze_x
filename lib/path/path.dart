@@ -5,7 +5,7 @@ import 'package.dart';
 export 'package.dart';
 
 ///过滤掉从外部引入的包
-bool filterExternPackage = true;
+bool filterExternPackage = false;
 
 List<DartFile> _files = [];
 
@@ -18,7 +18,7 @@ void _getDartFile(Package package, String path, List<DartFile> dartFiles) {
   for (FileSystemEntity entity in lists) {
     if (entity is File) {
       File file = entity;
-      if (file.uri.pathSegments.last.contains('.dart')) {
+      if (file.uri.pathSegments.last.split('.').last == 'dart') {
         dartFiles.add(DartFile(package, file.path));
       }
     } else if (entity is Directory) {
@@ -49,7 +49,7 @@ class DartFile {
   final String filePath;
 
   String get importName {
-    return 'package:${filePath.replaceAll(package.absolutePackagePath, package.name + Platform.pathSeparator)}';
+    return 'package:${filePath.replaceAll(package.absolutePackagePath, package.name + Platform.pathSeparator).replaceAll(Platform.pathSeparator, '/')}';
   }
 
   DartFile(this.package, this.filePath);

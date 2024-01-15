@@ -2,58 +2,23 @@ import 'package:analyzer/dart/ast/ast.dart';
 
 ///包含所有语法节点的枚举
 enum AnalyzerStep {
-  ///编译单元
   compilationUnit(_checker<CompilationUnit>),
-
-  ///类声明
   classDeclaration(_checker<ClassDeclaration>),
-
-  ///继承关键字及其继承对象
   extendsClause(_checker<ExtendsClause>),
-
-  ///构造器声明
   constructorDeclaration(_checker<ConstructorDeclaration>),
-
-  ///超级构造函数调用
   superConstructorInvocation(_checker<SuperConstructorInvocation>),
-
-  ///参数列表
   argumentList(_checker<ArgumentList>),
-
-  ///命名表达式
   namedExpression(_checker<NamedExpression>),
-
-  ///标签
   label(_checker<Label>),
-
-  ///简单字符串
   simpleStringLiteral(_checker<SimpleStringLiteral>),
-
-  ///构造器名称
   constructorName(_checker<ConstructorName>),
-
-  ///形式参数列表
   formalParameterList(_checker<FormalParameterList>),
-
-  ///默认形式参数
   defaultFormalParameter(_checker<DefaultFormalParameter>),
-
-  ///字段形式参数
   fieldFormalParameter(_checker<FieldFormalParameter>),
-
-  ///字段声明
   fieldDeclaration(_checker<FieldDeclaration>),
-
-  ///变量声明列表
   variableDeclarationList(_checker<VariableDeclarationList>),
-
-  ///命名类型
   namedType(_checker<NamedType>),
-
-  ///变量声明
   variableDeclaration(_checker<VariableDeclaration>),
-
-  ///方法声明
   methodDeclaration(_checker<MethodDeclaration>),
   adjacentStrings(_checker<AdjacentStrings>),
   annotation(_checker<Annotation>),
@@ -216,4 +181,4 @@ enum AnalyzerStep {
   const AnalyzerStep(this.typeChecker);
 }
 
-bool _checker<T>(dynamic obj) => obj is T;
+bool _checker<T>(dynamic obj) => obj is T || obj == T;

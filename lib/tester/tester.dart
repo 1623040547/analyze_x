@@ -110,6 +110,7 @@ class DeclarationRTester extends SimpleRetroTester {
 class DirectiveRTester extends SimpleRetroTester {
   @override
   List<AnalyzerStep> get path => [
+        AnalyzerStep.importDirective,
         AnalyzerStep.libraryDirective,
         AnalyzerStep.partDirective,
         AnalyzerStep.partOfDirective,

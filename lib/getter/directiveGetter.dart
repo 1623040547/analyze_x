@@ -2,7 +2,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 
 import '../base/getter.dart';
 import '../base/retro_tester.dart';
-import '../base/step.dart';
 import '../tester/tester.dart';
 
 ///获取一个dart文件中的[library]||[part]||[export]||[part_of]声明
@@ -11,11 +10,11 @@ class DirectiveGetter extends Getter {
 
   @override
   void reset() {
-    unit.dLibrary.addAll(getLibraries() ?? []);
-    unit.dExport.addAll(getExports() ?? []);
-    unit.dPart.addAll(getParts() ?? []);
-    unit.dPartOfLibrary.addAll(getPartOfLibrary() ?? []);
-    unit.dPartOfUri.addAll(getPartOfUri() ?? []);
+    unit.dLibrary.addAll(getLibraries());
+    unit.dExport.addAll(getExports());
+    unit.dPart.addAll(getParts());
+    unit.dPartOfLibrary.addAll(getPartOfLibrary());
+    unit.dPartOfUri.addAll(getPartOfUri());
   }
 
   @override
@@ -23,33 +22,33 @@ class DirectiveGetter extends Getter {
     DirectiveRTester(),
   ];
 
-  List<String>? getLibraries() => tester<DirectiveRTester>()
-      .nodes[AnalyzerStep.libraryDirective]
-      ?.map((node) => (node as LibraryDirective).name2.toString())
+  List<String> getLibraries() => tester<DirectiveRTester>()
+      .tList<LibraryDirective>()
+      .map((e) => e.name2.toString())
       .toList();
 
-  List<String>? getParts() => tester<DirectiveRTester>()
-      .nodes[AnalyzerStep.partDirective]
-      ?.map((node) => (node as PartDirective).uri.toString())
+  List<String> getParts() => tester<DirectiveRTester>()
+      .tList<PartDirective>()
+      .map((e) => e.uri.toString())
       .toList();
 
-  List<String>? getExports() => tester<DirectiveRTester>()
-      .nodes[AnalyzerStep.exportDirective]
-      ?.map((node) => (node as ExportDirective).uri.toString())
+  List<String> getExports() => tester<DirectiveRTester>()
+      .tList<ExportDirective>()
+      .map((e) => e.uri.toString())
       .toList();
 
-  List<String>? getPartOfLibrary() => tester<DirectiveRTester>()
-      .nodes[AnalyzerStep.partOfDirective]
-      ?.map((node) => (node as PartOfDirective).libraryName.toString())
+  List<String> getPartOfLibrary() => tester<DirectiveRTester>()
+      .tList<PartOfDirective>()
+      .map((e) => e.libraryName.toString())
       .toList();
 
-  List<String>? getPartOfUri() => tester<DirectiveRTester>()
-      .nodes[AnalyzerStep.partOfDirective]
-      ?.map((node) => (node as PartOfDirective).uri.toString())
+  List<String> getPartOfUri() => tester<DirectiveRTester>()
+      .tList<PartOfDirective>()
+      .map((e) => e.uri.toString())
       .toList();
 }
 
-class DirectiveUnit{
+class DirectiveUnit {
   Set<String> dLibrary = {};
   Set<String> dPart = {};
   Set<String> dExport = {};
