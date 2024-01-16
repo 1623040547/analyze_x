@@ -1,22 +1,22 @@
-import 'retro_tester.dart';
+import 'back_tester.dart';
 import 'step.dart';
 
 ///用于从[MainAnalyzer]中获取数据信息
 ///数据存储在每一个[Unit]中
 abstract class Getter implements Testers {
-  ///用于记录每一个[RetroTester]的接收情况
-  final Map<RetroTester, bool> _accepts = {};
+  ///用于记录每一个[BackTester]的接收情况
+  final Map<BackTester, bool> _accepts = {};
 
-  ///获取存储在[testers]中类型为[T]的[RetroTester]
+  ///获取存储在[testers]中类型为[T]的[BackTester]
   T tester<T>() {
     assert(testers.whereType<T>().length == 1);
     return testers.whereType<T>().first;
   }
 
-  ///获取某一个[RetroTester]的接收情况，当该tester未在路径上而未被记录时，返回false
+  ///获取某一个[BackTester]的接收情况，当该tester未在路径上而未被记录时，返回false
   bool testerAccept<T>() => _accepts[testers.whereType<T>().first] ?? false;
 
-  ///记录特征节点，为所有[RetroTester.path]的并集
+  ///记录特征节点，为所有[BackTester.path]的并集
   List<AnalyzerStep> get patterns {
     Set<AnalyzerStep> steps = {};
     for (var tester in testers) {
@@ -61,5 +61,5 @@ abstract class Getter implements Testers {
 }
 
 abstract class Testers {
-  List<RetroTester> testers = [];
+  List<BackTester> testers = [];
 }

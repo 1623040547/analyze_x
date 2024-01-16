@@ -13,7 +13,7 @@ class ParamGetter extends Getter {
 
   @override
   void reset() {
-    if (testerAccept<SuperNameRTester>()) {
+    if (testerAccept<SuperNameBTester>()) {
       units.add(
         ParamUnit(
           className: className,
@@ -23,16 +23,16 @@ class ParamGetter extends Getter {
     }
   }
 
-  String get className => tester<SuperNameRTester>()
-      .retroFirstNode<ClassDeclaration>()
+  String get className => tester<SuperNameBTester>()
+      .backFirstNode<ClassDeclaration>()
       .name
       .toString();
 
-  String get paramName => tester<SuperNameRTester>().firstNode.value;
+  String get paramName => tester<SuperNameBTester>().firstNode.value;
 
   @override
-  List<RetroTester> testers = [
-    SuperNameRTester(
+  List<BackTester> testers = [
+    SuperNameBTester(
       superClass: 'BaseParam',
       labelName: 'name',
     ),

@@ -11,7 +11,6 @@ class EventFactoryGen {
   final List<String> importFiles = [];
   final String typeOneMethod = '_whereTypeOne';
   final String typeOneOrNullMethod = '_whereTypeOneOrNull';
-  final String emptyCheckMethod = '_assertEmpty';
   final String onCheckFailMethod = 'onEventCheckFail';
 
   EventFactoryGen();
@@ -31,7 +30,6 @@ class EventFactoryGen {
         ),
         whereTypeOneMethod(),
         whereTypeOneOrNullMethod(),
-        assertEmptyMethod(),
         onEventCheckFailMethod(),
       ],
     );
@@ -115,14 +113,6 @@ class EventFactoryGen {
     """;
   }
 
-  String assertEmptyMethod() {
-    return """
-    void $emptyCheckMethod(List<BaseParam> params) {
-      assert(params.isEmpty);
-    }
-    """;
-  }
-
   String onEventCheckFailMethod() {
     return """
     void $onCheckFailMethod(String name, List<BaseParam> params, Object error);
@@ -133,6 +123,7 @@ class EventFactoryGen {
     return """
     BaseEvent from(String name, List<BaseParam> params) {
       BaseEvent? event;
+      List<BaseParam> origin = params;
       params = params.toList();
       try {
         switch (name) {
@@ -144,7 +135,8 @@ class EventFactoryGen {
       catch(error){
         $onCheckFailMethod(name,params,error);
       }
-      return event ?? GeneralEvent(name: name, parameters: params);
+      event?.additionParams.addAll(params);
+      return event ?? GeneralEvent(name: name, parameters: origin);
     }
     """;
   }
@@ -170,7 +162,6 @@ class EventFactoryGen {
           event = ${unit.className}(
               ${params.join()}
           );
-          $emptyCheckMethod(params);
           break;
       """;
     }

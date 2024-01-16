@@ -3,21 +3,21 @@ import 'package:analyzer/dart/ast/ast.dart';
 import '../base/base.dart';
 
 ///获取一个继承[superClass]的构造器超集中[labelName]的[SimpleStringLiteral]取值
-class SuperNameRTester extends RetroTester<SimpleStringLiteral> {
+class SuperNameBTester extends BackTester<SimpleStringLiteral> {
   final String superClass;
 
   final String labelName;
 
-  SuperNameRTester({
+  SuperNameBTester({
     required this.superClass,
     required this.labelName,
   });
 
   @override
   bool accept(node) {
-    ClassDeclaration classDeclaration = retroNode<ClassDeclaration>(node);
+    ClassDeclaration classDeclaration = backNode<ClassDeclaration>(node);
     ExtendsClause? extendsClause = classDeclaration.extendsClause;
-    NamedExpression namedExpression = retroNode<NamedExpression>(node);
+    NamedExpression namedExpression = backNode<NamedExpression>(node);
     Label label = namedExpression.name;
     if (extendsClause == null ||
         extendsClause.superclass.name2.toString() != superClass) {
@@ -48,7 +48,7 @@ class SuperNameRTester extends RetroTester<SimpleStringLiteral> {
 }
 
 ///获取构造器中的参数列表
-class ConstructorParametersRTester extends RetroTester<FieldFormalParameter> {
+class ConstructorParametersBTester extends BackTester<FieldFormalParameter> {
   @override
   bool accept(node) {
     return true;
@@ -67,7 +67,7 @@ class ConstructorParametersRTester extends RetroTester<FieldFormalParameter> {
 }
 
 ///获取类中的属性列表
-class ClassParametersRTester extends RetroTester<VariableDeclaration> {
+class ClassParametersBTester extends BackTester<VariableDeclaration> {
   @override
   bool accept(VariableDeclaration node) {
     return true;
@@ -87,7 +87,7 @@ class ClassParametersRTester extends RetroTester<VariableDeclaration> {
       ];
 }
 
-class MayExternRTester extends SimpleRetroTester {
+class MayExternRTester extends SimpleBackTester {
   @override
   List<AnalyzerStep> get path => [
         AnalyzerStep.namedType,
@@ -97,7 +97,7 @@ class MayExternRTester extends SimpleRetroTester {
 }
 
 ///获取声明：类、函数、枚举
-class DeclarationRTester extends SimpleRetroTester {
+class DeclarationBTester extends SimpleBackTester {
   @override
   List<AnalyzerStep> get path => [
         AnalyzerStep.classDeclaration,
@@ -107,7 +107,7 @@ class DeclarationRTester extends SimpleRetroTester {
 }
 
 ///获取库/文件引用信息
-class DirectiveRTester extends SimpleRetroTester {
+class DirectiveBTester extends SimpleBackTester {
   @override
   List<AnalyzerStep> get path => [
         AnalyzerStep.importDirective,

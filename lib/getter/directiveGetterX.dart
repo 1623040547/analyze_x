@@ -8,7 +8,7 @@ class DirectiveGetterX extends Getter {
   DirectiveXData data = DirectiveXData();
 
   @override
-  List<RetroTester<AstNode>> testers = [DirectiveRTester()];
+  List<BackTester<AstNode>> testers = [DirectiveBTester()];
 
   @override
   void reset() {
@@ -24,19 +24,19 @@ class DirectiveGetterX extends Getter {
   }
 
   List<LibraryDirective> getLibraries() =>
-      tester<DirectiveRTester>().tList<LibraryDirective>();
+      tester<DirectiveBTester>().tList<LibraryDirective>();
 
   List<PartDirective> getParts() =>
-      tester<DirectiveRTester>().tList<PartDirective>();
+      tester<DirectiveBTester>().tList<PartDirective>();
 
   List<ExportDirective> getExports() =>
-      tester<DirectiveRTester>().tList<ExportDirective>();
+      tester<DirectiveBTester>().tList<ExportDirective>();
 
   List<PartOfDirective> getPartOf() =>
-      tester<DirectiveRTester>().tList<PartOfDirective>();
+      tester<DirectiveBTester>().tList<PartOfDirective>();
 
   List<ImportDirective> getImport() =>
-      tester<DirectiveRTester>().tList<ImportDirective>();
+      tester<DirectiveBTester>().tList<ImportDirective>();
 }
 
 class DirectiveXData {

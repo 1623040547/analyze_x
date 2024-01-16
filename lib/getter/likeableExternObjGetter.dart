@@ -16,7 +16,7 @@ class LikeableExternObjGetter extends Getter {
   }
 
   @override
-  List<RetroTester<AstNode>> testers = [
+  List<BackTester<AstNode>> testers = [
     MayExternRTester(),
   ];
 

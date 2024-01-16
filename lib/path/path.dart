@@ -5,7 +5,7 @@ import 'package.dart';
 export 'package.dart';
 
 ///过滤掉从外部引入的包
-bool filterExternPackage = false;
+bool filterExternPackage = true;
 
 List<DartFile> _files = [];
 

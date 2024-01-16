@@ -15,21 +15,21 @@ class DeclarationGetter extends Getter {
   }
 
   @override
-  List<RetroTester<AstNode>> testers = [
-    DeclarationRTester(),
+  List<BackTester<AstNode>> testers = [
+    DeclarationBTester(),
   ];
 
-  List<String> getClasses() => tester<DeclarationRTester>()
+  List<String> getClasses() => tester<DeclarationBTester>()
       .tList<ClassDeclaration>()
       .map((e) => e.name.toString())
       .toList();
 
-  List<String> getFunctions() => tester<DeclarationRTester>()
+  List<String> getFunctions() => tester<DeclarationBTester>()
       .tList<FunctionDeclaration>()
       .map((e) => e.name.toString())
       .toList();
 
-  List<String> getEnums() => tester<DeclarationRTester>()
+  List<String> getEnums() => tester<DeclarationBTester>()
       .tList<EnumDeclaration>()
       .map((e) => e.name.toString())
       .toList();
