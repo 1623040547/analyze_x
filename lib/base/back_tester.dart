@@ -2,7 +2,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'step.dart';
 
 ///[AstNode]路径检测器,
-///Back代表回溯，因此指定路径时应当遵循从[叶子结点]=>[根结点]
+///Retro代表回溯，因此指定路径时应当遵循从[叶子结点]=>[根结点]
 abstract class BackTester<T extends AstNode> {
   List<AnalyzerStep> get path;
 

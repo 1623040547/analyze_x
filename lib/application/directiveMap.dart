@@ -49,9 +49,9 @@ class DirectiveMap {
         if (!relatePath.contains('../')) {
           path.filePath = dirPath + Platform.pathSeparator + relatePath;
         } else {
-          int backCount = relatePath.split('../').length - 1;
+          int retroCount = relatePath.split('../').length - 1;
           Directory dir = File(file.filePath).parent;
-          for (int i = 0; i < backCount; i++) {
+          for (int i = 0; i < retroCount; i++) {
             dir = dir.parent;
           }
           path.filePath = dir.path +

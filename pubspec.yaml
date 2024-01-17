@@ -19,7 +19,6 @@ dev_dependencies:
   analyzer: ^6.2.0 #语法树解析
   dart_style: ^2.3.4 #代码自动格式化
   pub_semver: ^2.1.4
-  source_gen: ^1.5.0
   build: ^2.4.1
   build_runner: ^2.4.7
 
