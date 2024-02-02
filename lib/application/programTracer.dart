@@ -1,10 +1,33 @@
 import 'dart:io';
+import 'package:analyzer_x/base/base.dart';
+
 import '../base/analyzer.dart';
 import '../getter/methodGetter.dart';
 import '../path/path.dart';
 
 class ProgramTracer {
+  ///假设有过多的patterns（比如超过10000，目前my_healer主项目为2027个pattern），就需要考虑如何快速地匹配pattern，
+  ///通过函数名映射id，在实际构建程序流时，以函数名为准，函数名相较id不容易变化
+  ///但如果还认为函数名是容易变化的，则可以尝试加入注解，注解保留原函数名参数，这样就可以随意更换原函数名
+  ///同时，因为有注解的存在，当原函数名更新时，以注解名去寻找id，将新函数名与id映射，注解名再更改为新函数名
+  static Set<int> patterns = {
+    291, //开始购买
+    622, //showTipsToast,购买失败为291，622
+    501, //refreshData，购买成功为291，501
+  };
   static List<int> paths = [];
+  static List<int> time = [];
+
+  static int initialTime = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+  ).millisecondsSinceEpoch;
+
+  static int get timeDiff {
+    int nowTime = DateTime.now().millisecondsSinceEpoch;
+    return nowTime - initialTime;
+  }
 
   static String importName =
       "import 'package:analyzer_x/application/programTracer.dart';\n";
@@ -15,14 +38,29 @@ class ProgramTracer {
   static String logPath =
       "/Users/qingdu/StudioProjects/my_healer/plugin/analyzer_helper/test/log.txt";
 
+  static String stepPath =
+      "/Users/qingdu/StudioProjects/my_healer/plugin/analyzer_helper/test/step.txt";
+
   static String fileName = "programTracer.dart";
 
+  ///可以采用类似关键帧的思想，指定一运行便需要保存的打点
   static trace(int id) {
-    paths.add(id);
-    if (paths.length == 2000) {
-      String text = File(logPath).readAsStringSync();
-      File(logPath).writeAsString(text + paths.join(' '));
-      paths.removeRange(0, 2001);
+    if (patterns.contains(id)) {
+      paths.add(id);
+      paths.add(timeDiff);
+      try {
+        if (paths.length >= 20000) {
+          var f = File(logPath);
+          if (!f.existsSync()) {
+            f.create();
+          }
+          File(logPath).writeAsString('${paths.sublist(0, 20001).join('\n')}\n',
+              mode: FileMode.writeOnlyAppend);
+          paths.removeRange(0, 20001);
+        }
+      } catch (e) {
+        analyzerLog('trace conflict');
+      }
     }
   }
 
@@ -104,5 +142,40 @@ class ProgramTracer {
     dict.create();
     dict.writeAsString(text);
     return getters;
+  }
+
+  static createProgramStream() {
+    List<String> lines = File(dictPath).readAsLinesSync();
+    Map<int, String> dict = {};
+    for (String line in lines) {
+      var elements = line.split(',');
+      dict[int.parse(elements[0])] = "${elements[1]}.${elements[2]}";
+    }
+    List<String> steps = File(logPath).readAsLinesSync();
+    String userSteps = "";
+
+    var f = File(stepPath);
+    f.create();
+    f.openWrite(mode: FileMode.writeOnlyAppend);
+
+    int turn = 0;
+    while (steps.isNotEmpty) {
+      List<String> batchSize = [];
+      try {
+        batchSize = steps.sublist(0, 20000);
+        steps.removeRange(0, 20000);
+      } catch (e) {
+        batchSize = steps.sublist(0);
+        steps.clear();
+      }
+      for (var data in batchSize) {
+        int userStep = int.parse(data);
+        userSteps += '${dict[userStep]}\n';
+      }
+      f.writeAsStringSync(userSteps, mode: FileMode.writeOnlyAppend);
+      userSteps = "";
+      analyzerLog(turn);
+      turn++;
+    }
   }
 }

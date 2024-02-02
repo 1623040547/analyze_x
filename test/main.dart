@@ -5,5 +5,6 @@ Future<void> main() async {
   //代码自动生成
   //AnalyzerX.instance.generate();
   //程序打桩注入
-  ProgramTracer.inject();
+  //ProgramTracer.inject();
+  ProgramTracer.createProgramStream();
 }
