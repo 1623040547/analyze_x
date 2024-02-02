@@ -99,6 +99,8 @@ class ProgramTracer {
         String newText = _traceReject(
             File(file.filePath).readAsStringSync(), getters[file]!.units);
         newText = _importReject(newText);
+        var f = File(file.filePath);
+        f.writeAsString(newText);
       }
     }
   }
