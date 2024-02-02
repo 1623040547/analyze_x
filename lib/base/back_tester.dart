@@ -112,6 +112,16 @@ abstract class SimpleBackTester extends BackTester {
     return node;
   }
 
+  dynamic rootNode(node) {
+    dynamic parent = node;
+    while (parent != null) {
+      parent = parent.parent;
+      if (parent.parent == null) {
+        return parent;
+      }
+    }
+  }
+
   @override
   bool accept(node) {
     return true;

@@ -117,3 +117,31 @@ class DirectiveBTester extends SimpleBackTester {
         AnalyzerStep.exportDirective,
       ];
 }
+
+///获取所有含有[BlockFunctionBody]的[MethodDeclaration]与[FunctionDeclaration]
+class MethodBTester extends SimpleBackTester {
+  @override
+  List<AnalyzerStep> get path => [
+        AnalyzerStep.methodDeclaration,
+        AnalyzerStep.functionDeclaration,
+      ];
+
+  @override
+  bool inPath(node) {
+    if (isValid(node)) {
+      return super.inPath(node);
+    }
+    return false;
+  }
+
+  bool isValid(AstNode node) {
+    if (AnalyzerStep.methodDeclaration.typeChecker(node)) {
+      return (node as MethodDeclaration).body is BlockFunctionBody;
+    }
+    if (AnalyzerStep.functionDeclaration.typeChecker(node)) {
+      return (node as FunctionDeclaration).functionExpression.body
+          is BlockFunctionBody;
+    }
+    return true;
+  }
+}
