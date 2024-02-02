@@ -136,9 +136,30 @@ class MethodBTester extends SimpleBackTester {
 
   bool isValid(AstNode node) {
     if (AnalyzerStep.methodDeclaration.typeChecker(node)) {
+      ///不记录在方法定义里再定义方法的写法
+      try {
+        backNode<MethodDeclaration>(node.parent);
+        return false;
+      } catch (e) {}
+
+      try {
+        backNode<FunctionDeclaration>(node.parent);
+        return false;
+      } catch (e) {}
+
       return (node as MethodDeclaration).body is BlockFunctionBody;
     }
     if (AnalyzerStep.functionDeclaration.typeChecker(node)) {
+      ///不记录在方法定义里再定义方法的写法
+      try {
+        backNode<MethodDeclaration>(node.parent);
+        return false;
+      } catch (e) {}
+
+      try {
+        backNode<FunctionDeclaration>(node.parent);
+        return false;
+      } catch (e) {}
       return (node as FunctionDeclaration).functionExpression.body
           is BlockFunctionBody;
     }

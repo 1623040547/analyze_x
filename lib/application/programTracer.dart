@@ -44,16 +44,13 @@ class ProgramTracer {
   }
 
   static _traceInject(String text, List<MethodUnit> units) {
-    Map<String, String> injectMap = {};
-    for (MethodUnit unit in units) {
-      String theOld = text.substring(unit.blockStart, unit.end);
-      String theNew =
-          theOld.replaceFirst('{', "{ ProgramTracer.trace(${unit.id});");
-      injectMap[theOld] = theNew;
+    for (MethodUnit unit in units.reversed) {
+      text = text.substring(0, unit.blockStart) +
+          text
+              .substring(unit.blockStart, unit.end)
+              .replaceFirst('{', "{ ProgramTracer.trace(${unit.id});") +
+          text.substring(unit.end);
     }
-    injectMap.forEach((key, value) {
-      text = text.replaceAll(key, value);
-    });
     return text;
   }
 
