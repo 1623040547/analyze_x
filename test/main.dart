@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:analyzer_x/application/programTracer.dart';
+import 'package:analyzer_x/application/eventToJson.dart';
 
 Future<void> main() async {
   //代码自动生成
@@ -7,6 +7,12 @@ Future<void> main() async {
   //程序打桩插入
   //ProgramTracer.inject();
   //程序打桩取出
-  ProgramTracer.reject();
+  // ProgramTracer.reject();
   //ProgramTracer.createProgramStream();
+  // ParamGetter getter = ParamGetter();
+  // var files = getDartFiles();
+  // for (var file in files) {
+  //   MainAnalyzer(getters: [getter], filePath: file.filePath);
+  // }
+   EventToJson.toJson();
 }

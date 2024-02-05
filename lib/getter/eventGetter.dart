@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/ast/ast.dart';
-
 import '../base/base.dart';
 import '../path/path.dart';
 import '../tester/tester.dart';
@@ -15,12 +14,14 @@ class EventGetter extends Getter {
   void reset() {
     if (testerAccept<SuperNameBTester>()) {
       units.add(EventUnit(
-        className: className,
-        eventName: eventName,
-        classParameters: classParameters,
-        classParameterQuestions: classParameterQuestions,
-        constructorParameters: constructorParameters,
-      ));
+          className: className,
+          eventName: eventName,
+          eventDesc: eventDescMeta,
+          classParameters: classParameters,
+          classParameterQuestions: classParameterQuestions,
+          constructorParameters: constructorParameters,
+          classParametersMeta: classParametersMeta,
+          panels: panels));
     }
   }
 
@@ -32,12 +33,25 @@ class EventGetter extends Getter {
     ),
     ClassParametersBTester(),
     ConstructorParametersBTester(),
+    MayExternRTester(),
   ];
 
   String get className => tester<SuperNameBTester>()
       .backFirstNode<ClassDeclaration>()
       .name
       .toString();
+
+  ///获取event class上的desc注释
+  String get eventDescMeta {
+    for (var meta in tester<SuperNameBTester>()
+        .backFirstNode<ClassDeclaration>()
+        .metadata) {
+      if (meta.name.name == "EventDesc") {
+        return meta.arguments!.arguments[0].toString();
+      }
+    }
+    return "";
+  }
 
   String get eventName => tester<SuperNameBTester>().firstNode.value;
 
@@ -48,6 +62,22 @@ class EventGetter extends Getter {
         tester<ClassParametersBTester>()
             .backFirstList<VariableDeclarationList>()
             .map((e) => e.type.toString().replaceAll('?', '')),
+      );
+
+  Map<String, String> get classParametersMeta => Map.fromIterables(
+        tester<ClassParametersBTester>()
+            .firstList
+            .map((e) => e.name.toString()),
+        tester<ClassParametersBTester>()
+            .backFirstList<FieldDeclaration>()
+            .map((e) {
+          for (var meta in e.metadata) {
+            if (meta.name.name == "ParamDesc") {
+              return meta.arguments!.arguments[0].toString();
+            }
+          }
+          return "";
+        }),
       );
 
   Map<String, bool> get classParameterQuestions => Map.fromIterables(
@@ -68,6 +98,16 @@ class EventGetter extends Getter {
             .map((e) => e.isRequiredNamed || e.isNamed),
       );
 
+  List<String> get panels {
+    List<String> p = [];
+    for (var fixed in tester<MayExternRTester>().tList<PrefixedIdentifier>()) {
+      if (fixed.prefix.name == "EventPanel") {
+        p.add(fixed.identifier.name);
+      }
+    }
+    return p;
+  }
+
   static bool mayTarget(String fileString) {
     return fileString.contains('super') &&
         fileString.contains('BaseEvent') &&
@@ -78,9 +118,13 @@ class EventGetter extends Getter {
 class EventUnit {
   final String className;
   final String eventName;
+  final String eventDesc;
 
   ///构造器形参列表，{形参变量名：形参类型}
   final Map<String, String> classParameters;
+
+  ///获取给各个参数进行的注解
+  final Map<String, String> classParametersMeta;
 
   ///记录参数是否可以为空,{形参变量名: 是否可为空}
   final Map<String, bool> classParameterQuestions;
@@ -89,12 +133,18 @@ class EventUnit {
   ///bool类型代表是否[isRequiredNamed]
   final Map<String, bool> constructorParameters;
 
+  ///上传的打点平台
+  final List<String> panels;
+
   EventUnit({
     required this.className,
+    required this.eventDesc,
     required this.eventName,
     required this.classParameters,
     required this.classParameterQuestions,
     required this.constructorParameters,
+    required this.classParametersMeta,
+    required this.panels,
   });
 }
 

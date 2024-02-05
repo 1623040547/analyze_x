@@ -5,6 +5,17 @@ import '../base/analyzer.dart';
 import '../getter/methodGetter.dart';
 import '../path/path.dart';
 
+///定义一个用于数据收集的注解，收集可转换为json类型的类集合，
+///自动生成：判断每一个函数的入参类型是否包含在类集合中，如果包含，
+///则有权将其数据选择性记录
+class DataCollection {
+  final String name;
+
+  const DataCollection(this.name);
+}
+
+const jsonCollection = DataCollection("toJson");
+
 class ProgramTracer {
   ///假设有过多的patterns（比如超过10000，目前my_healer主项目为2027个pattern），就需要考虑如何快速地匹配pattern，
   ///通过函数名映射id，在实际构建程序流时，以函数名为准，函数名相较id不容易变化
@@ -136,6 +147,9 @@ class ProgramTracer {
       );
       getters[file] = getter;
       for (var unit in getter.units) {
+        if (unit.className == "null") {
+          unit.className = ":${file.importName}";
+        }
         text += "$count,${unit.className},${unit.method}\n";
         unit.id = count;
         count += 1;
