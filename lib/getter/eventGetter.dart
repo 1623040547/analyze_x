@@ -14,14 +14,16 @@ class EventGetter extends Getter {
   void reset() {
     if (testerAccept<SuperNameBTester>()) {
       units.add(EventUnit(
-          className: className,
-          eventName: eventName,
-          eventDesc: eventDescMeta,
-          classParameters: classParameters,
-          classParameterQuestions: classParameterQuestions,
-          constructorParameters: constructorParameters,
-          classParametersMeta: classParametersMeta,
-          panels: panels));
+        className: className,
+        eventName: eventName,
+        eventDesc: eventDescMeta,
+        eventPlate: eventPlateMeta,
+        classParameters: classParameters,
+        classParameterQuestions: classParameterQuestions,
+        constructorParameters: constructorParameters,
+        classParametersMeta: classParametersMeta,
+        panels: panels,
+      ));
     }
   }
 
@@ -48,6 +50,18 @@ class EventGetter extends Getter {
         .metadata) {
       if (meta.name.name == "EventDesc") {
         return meta.arguments!.arguments[0].toString();
+      }
+    }
+    return "";
+  }
+
+  ///获取event class上的plate注释
+  String get eventPlateMeta {
+    for (var meta in tester<SuperNameBTester>()
+        .backFirstNode<ClassDeclaration>()
+        .metadata) {
+      if (meta.name.name == "EventDesc") {
+        return meta.arguments!.arguments[1].toString();
       }
     }
     return "";
@@ -119,6 +133,7 @@ class EventUnit {
   final String className;
   final String eventName;
   final String eventDesc;
+  final String eventPlate;
 
   ///构造器形参列表，{形参变量名：形参类型}
   final Map<String, String> classParameters;
@@ -139,6 +154,7 @@ class EventUnit {
   EventUnit({
     required this.className,
     required this.eventDesc,
+    required this.eventPlate,
     required this.eventName,
     required this.classParameters,
     required this.classParameterQuestions,

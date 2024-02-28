@@ -46,12 +46,30 @@ class EventToJson {
       unit.filter(patterns);
     }
 
+    _eventToJson();
+
+    _paramToJson();
+
+    _unionParamToJson();
+  }
+
+  static _eventToJson() {
     ///构建json文件
-    List jsonList = [];
+    List eventJsonList = [];
+    Set<String> names = {};
     for (EventUnit unit in eventGetter.units) {
       Map<String, dynamic> map = {};
+      if (names.contains(unit.eventName)) {
+        continue;
+      }
+      names.add(unit.eventName);
       map["event_name"] = unit.eventName;
-      map["event_desc"] = unit.eventDesc;
+      map["event_desc"] = unit.eventDesc.isEmpty
+          ? ""
+          : unit.eventDesc.substring(1, unit.eventDesc.length - 1);
+      map["event_plate"] = unit.eventDesc.isEmpty
+          ? ""
+          : unit.eventPlate.substring(1, unit.eventPlate.length - 1);
       map["panels"] = unit.panels.isEmpty
           ? [
               'xlog',
@@ -97,12 +115,49 @@ class EventToJson {
         paramList.add(paramMap);
       }
       map["param_list"] = paramList;
-      jsonList.add(map);
+      eventJsonList.add(map);
     }
 
     ///输出
-    String jsonStr = json.encode(jsonList);
-    File('/Users/qingdu/StudioProjects/my_healer/plugin/analyzer_helper/test/events.json')
+    String jsonStr = json.encode(eventJsonList);
+
+    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/events.json')
+        .writeAsString(jsonStr);
+  }
+
+  static _paramToJson() {
+    ///构建json文件
+    List paramJsonList = [];
+    for (ParamUnit unit in paramGetter.units) {
+      Map<String, dynamic> paramMap = {};
+      paramMap["param_name"] = unit.paramName;
+      paramMap["param_desc"] = unit.paramDesc;
+      paramMap["param_type"] = unit.paramType;
+      paramMap["param_check"] = unit.paramCheck;
+      paramJsonList.add(paramMap);
+    }
+
+    ///输出
+    String jsonStr = json.encode(paramJsonList);
+    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/params.json')
+        .writeAsString(jsonStr);
+  }
+
+  static _unionParamToJson() {
+    ///构建json文件
+    List paramJsonList = [];
+    for (UnionParamUnit unit in unionParamGetter.units) {
+      Map<String, dynamic> paramMap = {};
+      paramMap["param_name"] = unit.paramName;
+      paramMap["param_desc"] = unit.paramDesc;
+      paramMap["param_type"] = unit.paramType;
+      paramMap["params"] = unit.children;
+      paramJsonList.add(paramMap);
+    }
+
+    ///输出
+    String jsonStr = json.encode(paramJsonList);
+    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/union_params.json')
         .writeAsString(jsonStr);
   }
 }
