@@ -11,12 +11,11 @@ class UnionParamGetter extends Getter {
     if (testerAccept<SuperNameBTester>()) {
       units.add(
         UnionParamUnit(
-          className: className,
-          paramName: paramName,
-          children: methodInvocations,
-          paramDesc: paramDesc,
-          paramType: paramType
-        ),
+            className: className,
+            paramName: paramName,
+            children: methodInvocations,
+            paramDesc: paramDesc,
+            paramType: paramType),
       );
     }
   }
@@ -81,10 +80,11 @@ class UnionParamUnit {
   ///可能是BaseParam Class的Method Invocation
   final List<String> children;
 
-  void filter(List<String> patterns) {
+  void filter(Map<String, String> patterns) {
     for (var child in children.toList()) {
-      if (!patterns.contains(child)) {
-        children.remove(child);
+      children.remove(child);
+      if (patterns.containsKey(child)) {
+        children.add(patterns[child]!);
       }
     }
   }

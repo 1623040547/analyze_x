@@ -41,7 +41,9 @@ class EventToJson {
     }
 
     ///过滤
-    List<String> patterns = paramGetter.units.map((e) => e.className).toList();
+    Map<String, String> patterns = Map.fromIterables(
+        paramGetter.units.map((e) => e.className),
+        paramGetter.units.map((e) => e.paramName));
     for (var unit in unionParamGetter.units) {
       unit.filter(patterns);
     }
@@ -84,6 +86,7 @@ class EventToJson {
       map["locations"] = [];
 
       List paramList = [];
+      List unionParamList = [];
       for (var key in unit.classParameters.keys) {
         ParamUnit? u1 = param(unit.classParameters[key]!);
         UnionParamUnit? u2 = unionParam(unit.classParameters[key]!);
@@ -94,27 +97,27 @@ class EventToJson {
           paramMap["param_desc"] =
               unit.classParametersMeta[key] ?? u1.paramDesc;
           paramMap["param_check"] = u1.paramCheck;
-          paramMap["type"] = "base";
           paramMap["params"] = [];
+          paramList.add(paramMap);
         } else if (u2 != null) {
           paramMap["param_name"] = u2.paramName;
-          paramMap["param_type"] = "";
+          paramMap["param_type"] = u2.className;
           paramMap["param_desc"] =
               unit.classParametersMeta[key] ?? u2.paramDesc;
           paramMap["param_check"] = "";
-          paramMap["type"] = "union";
           paramMap["params"] = u2.children;
+          unionParamList.add(paramMap);
         } else {
           paramMap["param_name"] = key;
           paramMap["param_type"] = unit.classParameters[key];
           paramMap["param_desc"] = "Not a specific param";
           paramMap["param_check"] = "";
-          paramMap["type"] = "unknown";
           paramMap["params"] = [];
+          paramList.add(paramMap);
         }
-        paramList.add(paramMap);
       }
       map["param_list"] = paramList;
+      map["union_param_list"] = unionParamList;
       eventJsonList.add(map);
     }
 
@@ -150,7 +153,7 @@ class EventToJson {
       Map<String, dynamic> paramMap = {};
       paramMap["param_name"] = unit.paramName;
       paramMap["param_desc"] = unit.paramDesc;
-      paramMap["param_type"] = unit.paramType;
+      paramMap["param_type"] = unit.className;
       paramMap["params"] = unit.children;
       paramJsonList.add(paramMap);
     }
