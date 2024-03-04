@@ -11,11 +11,14 @@ class UnionParamGetter extends Getter {
     if (testerAccept<SuperNameBTester>()) {
       units.add(
         UnionParamUnit(
-            className: className,
-            paramName: paramName,
-            children: methodInvocations,
-            paramDesc: paramDesc,
-            paramType: paramType),
+          className: className,
+          paramName: paramName,
+          children: methodInvocations,
+          paramDesc: paramDesc,
+          paramType: paramType,
+          paramStart: paramStart,
+          paramEnd: paramEnd,
+        ),
       );
     }
   }
@@ -35,6 +38,12 @@ class UnionParamGetter extends Getter {
       .backFirstNode<ClassDeclaration>()
       .name
       .toString();
+
+  int get paramStart =>
+      tester<SuperNameBTester>().backFirstNode<ClassDeclaration>().offset;
+
+  int get paramEnd =>
+      tester<SuperNameBTester>().backFirstNode<ClassDeclaration>().end;
 
   String get paramName => tester<SuperNameBTester>().firstNode.value;
 
@@ -76,6 +85,8 @@ class UnionParamUnit {
   final String paramName;
   final String paramDesc;
   final String paramType;
+  final int paramStart;
+  final int paramEnd;
 
   ///可能是BaseParam Class的Method Invocation
   final List<String> children;
@@ -95,5 +106,7 @@ class UnionParamUnit {
     required this.paramDesc,
     required this.children,
     required this.paramType,
+    required this.paramStart,
+    required this.paramEnd,
   });
 }

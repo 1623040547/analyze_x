@@ -23,6 +23,8 @@ class EventGetter extends Getter {
         constructorParameters: constructorParameters,
         classParametersMeta: classParametersMeta,
         panels: panels,
+        eventStart: eventStart,
+        eventEnd: eventEnd,
       ));
     }
   }
@@ -42,6 +44,12 @@ class EventGetter extends Getter {
       .backFirstNode<ClassDeclaration>()
       .name
       .toString();
+
+  int get eventStart =>
+      tester<SuperNameBTester>().backFirstNode<ClassDeclaration>().offset;
+
+  int get eventEnd =>
+      tester<SuperNameBTester>().backFirstNode<ClassDeclaration>().end;
 
   ///获取event class上的desc注释
   String get eventDescMeta {
@@ -135,6 +143,12 @@ class EventUnit {
   final String eventDesc;
   final String eventPlate;
 
+  ///事件函数开始偏移
+  final int eventStart;
+
+  ///事件函数结束偏移
+  final int eventEnd;
+
   ///构造器形参列表，{形参变量名：形参类型}
   final Map<String, String> classParameters;
 
@@ -161,6 +175,8 @@ class EventUnit {
     required this.constructorParameters,
     required this.classParametersMeta,
     required this.panels,
+    required this.eventStart,
+    required this.eventEnd,
   });
 }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:analyzer_x/application/eventToJson.dart';
+import 'package:analyzer_x/application/gitAnalyzer.dart';
 
 Future<void> main() async {
   //代码自动生成
@@ -14,5 +15,6 @@ Future<void> main() async {
   // for (var file in files) {
   //   MainAnalyzer(getters: [getter], filePath: file.filePath);
   // }
-   EventToJson.toJson();
+  //  EventToJson.toJson();
+   GitAnalyzer.instance.gitLog();
 }

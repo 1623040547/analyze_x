@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:analyzer_x/base/log.dart';
 import 'package:dart_style/dart_style.dart';
 
-import '../getter/eventGetter.dart';
-import '../path/path.dart';
+
+import '../../getter/eventGetter.dart';
+import '../../path/path.dart';
 import 'importGen.dart';
 
 class EventFactoryGen {

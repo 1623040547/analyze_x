@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:dart_style/dart_style.dart';
 
-import '../base/log.dart';
-import '../getter/paramGetter.dart';
-import '../path/path.dart';
+
+import '../../base/log.dart';
+import '../../getter/paramGetter.dart';
+import '../../path/path.dart';
 import 'importGen.dart';
 
 class ParamFactoryGen {

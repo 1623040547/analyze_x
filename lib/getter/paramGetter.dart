@@ -20,6 +20,8 @@ class ParamGetter extends Getter {
           paramName: paramName,
           paramDesc: paramDesc,
           paramType: paramType,
+          paramStart: paramStart,
+          paramEnd: paramEnd,
 
           ///todo:获取参数检查类型，但因为现在类型检查尚未标准化，暂时跳过
           paramCheck: '',
@@ -32,6 +34,12 @@ class ParamGetter extends Getter {
       .backFirstNode<ClassDeclaration>()
       .name
       .toString();
+
+  int get paramStart =>
+      tester<SuperNameBTester>().backFirstNode<ClassDeclaration>().offset;
+
+  int get paramEnd =>
+      tester<SuperNameBTester>().backFirstNode<ClassDeclaration>().end;
 
   String get paramDesc {
     for (var meta in tester<SuperNameBTester>()
@@ -79,6 +87,8 @@ class ParamUnit {
   final String paramDesc;
   final String paramType;
   final String paramCheck;
+  final int paramStart;
+  final int paramEnd;
 
   ParamUnit({
     required this.className,
@@ -86,6 +96,8 @@ class ParamUnit {
     required this.paramDesc,
     required this.paramType,
     required this.paramCheck,
+    required this.paramStart,
+    required this.paramEnd,
   });
 }
 

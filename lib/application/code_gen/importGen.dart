@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import '../base/analyzer.dart';
-import '../getter/DirectiveGetter.dart';
-import '../getter/likeableExternObjGetter.dart';
-import '../getter/declarationGetter.dart';
-import '../path/path.dart';
+import '../../base/analyzer.dart';
+import '../../getter/declarationGetter.dart';
+import '../../getter/directiveGetter.dart';
+import '../../getter/likeableExternObjGetter.dart';
+import '../../path/path.dart';
 
 class ImportGen {
   static ImportGen? _instance;

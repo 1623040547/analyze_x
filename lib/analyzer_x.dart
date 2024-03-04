@@ -1,4 +1,8 @@
-import 'gen/gen.dart';
+
+
+
+import 'application/code_gen/eventFactoryGen.dart';
+import 'application/code_gen/paramFactoryGen.dart';
 
 class AnalyzerX {
   static AnalyzerX? _instance;
