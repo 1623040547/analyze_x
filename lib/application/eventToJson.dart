@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:analyzer_x/application/gitAnalyzer.dart';
 import 'package:analyzer_x/base/analyzer.dart';
+import 'package:analyzer_x/base/base.dart';
 import 'package:analyzer_x/getter/eventGetter.dart';
 import 'package:analyzer_x/path/path.dart';
 
@@ -10,26 +12,51 @@ import '../getter/unionParamGetter.dart';
 
 ///将事件/参数必要信息转换为json文件
 class EventToJson {
-  static EventGetter eventGetter = EventGetter();
-  static ParamGetter paramGetter = ParamGetter();
-  static UnionParamGetter unionParamGetter = UnionParamGetter();
+  static EventToJson? _instance;
 
-  static ParamUnit? param(String p) {
-    List<ParamUnit> params =
-        paramGetter.units.where((element) => element.className == p).toList();
+  static EventToJson get instance => _instance ??= EventToJson();
+
+  Map<DartFile, List<EventUnit>> eventMap = {};
+  Map<DartFile, List<ParamUnit>> paramMap = {};
+  Map<DartFile, List<UnionParamUnit>> unionParamMap = {};
+
+  List<EventUnit> get events =>
+      eventMap.values.expand((element) => element).toList();
+
+  List<ParamUnit> get params =>
+      paramMap.values.expand((element) => element).toList();
+
+  List<UnionParamUnit> get unionParams =>
+      unionParamMap.values.expand((element) => element).toList();
+
+  ParamUnit? param(String p) {
+    List<ParamUnit> paramList =
+        params.where((element) => element.className == p).toList();
+    return paramList.isEmpty ? null : paramList.first;
+  }
+
+  UnionParamUnit? unionParam(String p) {
+    List<UnionParamUnit> params =
+        unionParams.where((element) => element.className == p).toList();
     return params.isEmpty ? null : params.first;
   }
 
-  static UnionParamUnit? unionParam(String p) {
-    List<UnionParamUnit> params = unionParamGetter.units
-        .where((element) => element.className == p)
-        .toList();
-    return params.isEmpty ? null : params.first;
+  toJson() {
+    analyze();
+
+    eventToJson();
+
+    paramToJson();
+
+    unionParamToJson();
   }
 
-  static toJson() {
+  analyze() {
     ///获取需求数据
     for (var file in getDartFiles()) {
+      EventGetter eventGetter = EventGetter();
+      ParamGetter paramGetter = ParamGetter();
+      UnionParamGetter unionParamGetter = UnionParamGetter();
       MainAnalyzer(
         getters: [
           eventGetter,
@@ -38,28 +65,65 @@ class EventToJson {
         ],
         filePath: file.filePath,
       );
+      if (eventGetter.units.isNotEmpty) {
+        eventMap[file] = eventGetter.units;
+      }
+      if (paramGetter.units.isNotEmpty) {
+        paramMap[file] = paramGetter.units;
+      }
+      if (unionParamGetter.units.isNotEmpty) {
+        unionParamMap[file] = unionParamGetter.units;
+      }
     }
 
     ///过滤
     Map<String, String> patterns = Map.fromIterables(
-        paramGetter.units.map((e) => e.className),
-        paramGetter.units.map((e) => e.paramName));
-    for (var unit in unionParamGetter.units) {
+        params.map((e) => e.className), params.map((e) => e.paramName));
+    for (var unit in unionParams) {
       unit.filter(patterns);
     }
-
-    _eventToJson();
-
-    _paramToJson();
-
-    _unionParamToJson();
   }
 
-  static _eventToJson() {
+  eventToJson() {
+    Map<String, List<EventUnit>> map = _eventToVersion();
+    List l = [];
+    for (String version in map.keys) {
+      analyzerLog('eventToJson $version');
+      l.add(_eventToJson(map[version]!, version));
+    }
+
+    ///输出
+    String jsonStr = json.encode(l);
+
+    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/events.json')
+        .writeAsString(jsonStr);
+  }
+
+  paramToJson() {
+    List l = _paramToJson(params);
+
+    ///输出
+    String jsonStr = json.encode(l);
+
+    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/params.json')
+        .writeAsString(jsonStr);
+  }
+
+  unionParamToJson() {
+    List l = _unionParamToJson(unionParams);
+
+    ///输出
+    String jsonStr = json.encode(l);
+
+    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/union_params.json')
+        .writeAsString(jsonStr);
+  }
+
+  Map<String, dynamic> _eventToJson(List<EventUnit> events, String version) {
     ///构建json文件
     List eventJsonList = [];
     Set<String> names = {};
-    for (EventUnit unit in eventGetter.units) {
+    for (EventUnit unit in events) {
       Map<String, dynamic> map = {};
       if (names.contains(unit.eventName)) {
         continue;
@@ -121,17 +185,13 @@ class EventToJson {
       eventJsonList.add(map);
     }
 
-    ///输出
-    String jsonStr = json.encode(eventJsonList);
-
-    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/events.json')
-        .writeAsString(jsonStr);
+    return {"version": version, "data": eventJsonList};
   }
 
-  static _paramToJson() {
+  List _paramToJson(List<ParamUnit> params) {
     ///构建json文件
     List paramJsonList = [];
-    for (ParamUnit unit in paramGetter.units) {
+    for (ParamUnit unit in params) {
       Map<String, dynamic> paramMap = {};
       paramMap["param_name"] = unit.paramName;
       paramMap["param_desc"] = unit.paramDesc;
@@ -140,16 +200,13 @@ class EventToJson {
       paramJsonList.add(paramMap);
     }
 
-    ///输出
-    String jsonStr = json.encode(paramJsonList);
-    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/params.json')
-        .writeAsString(jsonStr);
+    return paramJsonList;
   }
 
-  static _unionParamToJson() {
+  List _unionParamToJson(List<UnionParamUnit> unionParams) {
     ///构建json文件
     List paramJsonList = [];
-    for (UnionParamUnit unit in unionParamGetter.units) {
+    for (UnionParamUnit unit in unionParams) {
       Map<String, dynamic> paramMap = {};
       paramMap["param_name"] = unit.paramName;
       paramMap["param_desc"] = unit.paramDesc;
@@ -158,9 +215,26 @@ class EventToJson {
       paramJsonList.add(paramMap);
     }
 
-    ///输出
-    String jsonStr = json.encode(paramJsonList);
-    File('${PackageConfig.projPath}/plugin/analyzer_helper/test/union_params.json')
-        .writeAsString(jsonStr);
+    return paramJsonList;
+  }
+
+  Map<String, List<EventUnit>> _eventToVersion() {
+    Map<String, List<EventUnit>> map = {};
+    for (DartFile file in eventMap.keys) {
+      List<String> lines = File(file.filePath).readAsLinesSync();
+      List<int> offsets = [0];
+      for (var line in lines) {
+        offsets.add(offsets.last + line.length + 1);
+      }
+      for (EventUnit unit in eventMap[file] ?? []) {
+        int startLine =
+            offsets.indexWhere((element) => element > unit.eventStart);
+        int endLine = offsets.indexWhere((element) => element > unit.eventEnd);
+        String version = GitAnalyzer.instance
+            .analyzeVersion(file.filePath, startLine, endLine);
+        map[version] = [...map[version] ?? [], unit];
+      }
+    }
+    return map;
   }
 }

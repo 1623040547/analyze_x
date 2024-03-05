@@ -15,6 +15,7 @@ Future<void> main() async {
   // for (var file in files) {
   //   MainAnalyzer(getters: [getter], filePath: file.filePath);
   // }
-  //  EventToJson.toJson();
-   GitAnalyzer.instance.gitLog();
+  //  EventToJson.instance.analyze();
+   EventToJson.instance.toJson();
+   // GitAnalyzer.instance.gitLog();
 }

@@ -7,8 +7,10 @@ import 'step.dart';
 class FullVisitor extends SimpleAstVisitor {
   ///指定特征，再深度遍历过程中，符合特征则调用触发器[trigger]
   final List<AnalyzerStep> patterns;
+
   ///记录当前遍历路径
   final List<AnalyzerStep> currentPath;
+
   ///当遍历到[patterns]指定节点时执行
   final void Function(dynamic obj, AnalyzerStep step)? trigger;
 
@@ -59,7 +61,8 @@ class FullVisitor extends SimpleAstVisitor {
   visitAssignmentExpression(AssignmentExpression node) => forward(node);
 
   @override
-  visitAugmentationImportDirective(AugmentationImportDirective node) => forward(node);
+  visitAugmentationImportDirective(AugmentationImportDirective node) =>
+      forward(node);
 
   @override
   visitAwaitExpression(AwaitExpression node) => forward(node);
@@ -122,7 +125,8 @@ class FullVisitor extends SimpleAstVisitor {
   visitConstructorDeclaration(ConstructorDeclaration node) => forward(node);
 
   @override
-  visitConstructorFieldInitializer(ConstructorFieldInitializer node) => forward(node);
+  visitConstructorFieldInitializer(ConstructorFieldInitializer node) =>
+      forward(node);
 
   @override
   visitConstructorName(ConstructorName node) => forward(node);
@@ -197,10 +201,12 @@ class FullVisitor extends SimpleAstVisitor {
   visitFieldFormalParameter(FieldFormalParameter node) => forward(node);
 
   @override
-  visitForEachPartsWithDeclaration(ForEachPartsWithDeclaration node) => forward(node);
+  visitForEachPartsWithDeclaration(ForEachPartsWithDeclaration node) =>
+      forward(node);
 
   @override
-  visitForEachPartsWithIdentifier(ForEachPartsWithIdentifier node) => forward(node);
+  visitForEachPartsWithIdentifier(ForEachPartsWithIdentifier node) =>
+      forward(node);
 
   @override
   visitForEachPartsWithPattern(ForEachPartsWithPattern node) => forward(node);
@@ -281,7 +287,8 @@ class FullVisitor extends SimpleAstVisitor {
   visitIndexExpression(IndexExpression node) => forward(node);
 
   @override
-  visitInstanceCreationExpression(InstanceCreationExpression node) => forward(node);
+  visitInstanceCreationExpression(InstanceCreationExpression node) =>
+      forward(node);
 
   @override
   visitIntegerLiteral(IntegerLiteral node) => forward(node);
@@ -391,11 +398,12 @@ class FullVisitor extends SimpleAstVisitor {
   visitPatternFieldName(PatternFieldName node) => forward(node);
 
   @override
-  visitPatternVariableDeclaration(PatternVariableDeclaration node) => forward(node);
+  visitPatternVariableDeclaration(PatternVariableDeclaration node) =>
+      forward(node);
 
   @override
   visitPatternVariableDeclarationStatement(
-      PatternVariableDeclarationStatement node) =>
+          PatternVariableDeclarationStatement node) =>
       forward(node);
 
   @override
@@ -424,18 +432,17 @@ class FullVisitor extends SimpleAstVisitor {
       forward(node);
 
   @override
-  visitRecordTypeAnnotationNamedFields(
-      RecordTypeAnnotationNamedFields node) =>
+  visitRecordTypeAnnotationNamedFields(RecordTypeAnnotationNamedFields node) =>
       forward(node);
 
   @override
   visitRecordTypeAnnotationPositionalField(
-      RecordTypeAnnotationPositionalField node) =>
+          RecordTypeAnnotationPositionalField node) =>
       forward(node);
 
   @override
   visitRedirectingConstructorInvocation(
-      RedirectingConstructorInvocation node) =>
+          RedirectingConstructorInvocation node) =>
       forward(node);
 
   @override
@@ -446,7 +453,8 @@ class FullVisitor extends SimpleAstVisitor {
       forward(node);
 
   @override
-  visitRepresentationDeclaration(RepresentationDeclaration node) => forward(node);
+  visitRepresentationDeclaration(RepresentationDeclaration node) =>
+      forward(node);
 
   @override
   visitRestPatternElement(RestPatternElement node) => forward(node);
@@ -482,7 +490,8 @@ class FullVisitor extends SimpleAstVisitor {
   visitStringInterpolation(StringInterpolation node) => forward(node);
 
   @override
-  visitSuperConstructorInvocation(SuperConstructorInvocation node) => forward(node);
+  visitSuperConstructorInvocation(SuperConstructorInvocation node) =>
+      forward(node);
 
   @override
   visitSuperExpression(SuperExpression node) => forward(node);
@@ -518,7 +527,8 @@ class FullVisitor extends SimpleAstVisitor {
   visitThrowExpression(ThrowExpression node) => forward(node);
 
   @override
-  visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) => forward(node);
+  visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) =>
+      forward(node);
 
   @override
   visitTryStatement(TryStatement node) => forward(node);
@@ -559,5 +569,4 @@ class FullVisitor extends SimpleAstVisitor {
 
   @override
   visitYieldStatement(YieldStatement node) => forward(node);
-
 }

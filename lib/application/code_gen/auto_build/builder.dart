@@ -5,16 +5,11 @@ import 'package:build/build.dart';
 import '../../../analyzer_x.dart';
 import '../../../base/log.dart';
 
-
-
-
 int _count = 0;
 
 Builder myBuilder(BuilderOptions options) => MyBuilder();
 
-
 class MyBuilder extends Builder {
-
   @override
   FutureOr<void> build(BuildStep buildStep) {
     String buildMsg = '';
